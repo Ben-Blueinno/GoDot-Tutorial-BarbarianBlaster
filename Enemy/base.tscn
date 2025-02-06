@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://cc4eh6qbtrowy"]
+
+[ext_resource type="Script" path="res://Enemy/base.gd" id="1_p0dlk"]
+[ext_resource type="PackedScene" uid="uid://cfedjbv5soqsp" path="res://Assets/Base.glb" id="2_3dbya"]
+
+[node name="Base" type="Node3D" groups=["base"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -6)
+script = ExtResource("1_p0dlk")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.56352, 0)
+billboard = 1
+text = "HP"
+font_size = 500
+outline_size = 100
+
+[node name="Base" parent="." instance=ExtResource("2_3dbya")]

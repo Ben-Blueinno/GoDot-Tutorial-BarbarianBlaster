@@ -1,0 +1,71 @@
+[gd_scene load_steps=9 format=3 uid="uid://cq5alxjlyc7o0"]
+
+[ext_resource type="Script" path="res://turret/turret.gd" id="1_60jus"]
+[ext_resource type="PackedScene" uid="uid://ccaw2tkw6mf6t" path="res://turret/projectile.tscn" id="1_jxccc"]
+[ext_resource type="PackedScene" uid="uid://ccuafqket4k5" path="res://Assets/Cannon.glb" id="3_3mf7n"]
+[ext_resource type="PackedScene" uid="uid://mf8crg5kij64" path="res://Assets/TurretBase.glb" id="4_kkxmf"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6yn52"]
+height = 1.0
+
+[sub_resource type="Animation" id="Animation_yfr11"]
+resource_name = "Fire"
+length = 0.3
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position:z")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(2, 3),
+"points": PackedFloat32Array(-0.3, 0, 0, 0.05, 0.1, 0, -0.075, -0.15, 0.075, 0.15),
+"times": PackedFloat32Array(0, 0.3)
+}
+
+[sub_resource type="Animation" id="Animation_pmiqw"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position:z")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dxqw3"]
+_data = {
+"Fire": SubResource("Animation_yfr11"),
+"RESET": SubResource("Animation_pmiqw")
+}
+
+[node name="Turret" type="Node3D"]
+script = ExtResource("1_60jus")
+projectile = ExtResource("1_jxccc")
+
+[node name="TurretBase" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("CylinderMesh_6yn52")
+
+[node name="TurretTop" type="Node3D" parent="TurretBase"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+
+[node name="Cannon" parent="TurretBase/TurretTop" instance=ExtResource("3_3mf7n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.827606, 0)
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../TurretBase/TurretTop")
+libraries = {
+"": SubResource("AnimationLibrary_dxqw3")
+}
+
+[node name="TurretBase2" parent="." instance=ExtResource("4_kkxmf")]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
